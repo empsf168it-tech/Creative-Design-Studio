@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Footer } from '../components/Footer';
 import { PageRoute } from '../types';
+import trenchImg from '../assets/images/valence_trench_look.png';
 
 const SYMBOLS = ['8', '$', '^^', '%', '/'];
 
@@ -10,7 +11,6 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [expandedMaterial, setExpandedMaterial] = useState<number | null>(null);
   const [symbol, setSymbol] = useState('8');
   const lastUpdateRef = useRef(0);
@@ -94,14 +94,14 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         {/* SECTION 1: ABOUT PAGE HERO SECTION — EXACT HOME PAGE HERO FORMAT & ROUND ANIMATION */}
         <section className="max-w-[1400px] mx-auto mb-24">
           <div className="relative w-full h-[85vh] sm:h-[90vh] rounded-3xl overflow-hidden border border-neutral-800 shadow-2xl flex flex-col justify-between p-6 sm:p-12">
-            {/* Hero Background Image (Only image changed) */}
+            {/* Hero Background Image */}
             <motion.img
-              initial={{ scale: 1.08, opacity: 0.8 }}
+              initial={{ scale: 1.03, opacity: 0.8 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-              src="/images/valence_trench_look.png"
+              src={trenchImg}
               alt="VALENCE Atelier Editorial"
-              className="absolute inset-0 w-full h-full object-cover object-center"
+              className="absolute inset-0 w-full h-full object-cover object-top"
             />
 
             {/* Dark Gradient Overlay for Vignette Contrast */}
@@ -225,27 +225,32 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             MATERIAL SPECS & ENGINEERING
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
             {materials.map((mat) => (
               <motion.div
                 key={mat.id}
                 whileHover={{ y: -4 }}
                 onClick={() => setExpandedMaterial(expandedMaterial === mat.id ? null : mat.id)}
-                className="cursor-pointer p-8 rounded-xl bg-neutral-900/60 border border-neutral-800 hover:border-neutral-500 transition-all duration-300 backdrop-blur-sm"
+                className="cursor-pointer p-6 sm:p-8 rounded-xl bg-neutral-900/60 border border-neutral-800 hover:border-neutral-500 transition-all duration-300 backdrop-blur-sm flex flex-col justify-between h-full"
               >
-                <div className="flex justify-between items-start mb-6">
-                  <span className="text-3xl text-neutral-300">{mat.icon}</span>
-                  <span className="text-xs uppercase tracking-widest px-3 py-1 bg-neutral-800 text-neutral-300 rounded-full border border-neutral-700">
-                    {mat.spec}
-                  </span>
+                <div className="flex-1 flex flex-col">
+                  {/* Centered Icon & Technical Spec Badge on all views */}
+                  <div className="flex flex-col items-center gap-3 mb-6">
+                    <span className="text-3xl text-neutral-300 text-center flex justify-center items-center">{mat.icon}</span>
+                    <span className="text-xs uppercase tracking-widest px-3 py-1 bg-neutral-800 text-neutral-300 rounded-full border border-neutral-700 text-center font-mono">
+                      {mat.spec}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl sm:text-2xl font-medium uppercase tracking-tight mb-3 text-white">
+                    {mat.title}
+                  </h3>
+                  <p className="text-neutral-400 text-sm leading-relaxed mb-6 flex-1">
+                    {mat.desc}
+                  </p>
                 </div>
-                <h3 className="text-2xl font-medium uppercase tracking-tight mb-3 text-white">
-                  {mat.title}
-                </h3>
-                <p className="text-neutral-400 text-sm leading-relaxed mb-4">
-                  {mat.desc}
-                </p>
-                <div className="text-xs uppercase tracking-widest text-white flex items-center gap-2">
+
+                <div className="text-xs uppercase tracking-widest text-white flex items-center gap-2 mt-auto pt-2">
                   <span>{expandedMaterial === mat.id ? "[ COLLAPSE TECHNICAL SPEC ]" : "[ EXPAND TECHNICAL SPEC ]"}</span>
                   <span>→</span>
                 </div>
@@ -349,31 +354,22 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             {roadmap.map((item, idx) => (
               <div
                 key={idx}
-                className={`p-6 sm:p-8 rounded-xl border transition-all duration-300 ${
-                  activeTab === idx
-                    ? 'bg-white text-black border-white'
-                    : 'bg-neutral-950 text-white border-neutral-800 hover:border-neutral-700'
-                }`}
-                onClick={() => setActiveTab(idx)}
+                className="p-6 sm:p-8 rounded-xl border border-neutral-800 bg-neutral-950 text-white hover:border-neutral-600 transition-all duration-300"
               >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer gap-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   <div className="flex items-center gap-4">
-                    <span className={`text-xs uppercase tracking-widest px-3 py-1 rounded-full ${
-                      activeTab === idx ? 'bg-black text-white' : 'bg-neutral-800 text-neutral-300'
-                    }`}>
+                    <span className="text-xs uppercase tracking-widest px-3 py-1 rounded-full bg-neutral-800 text-neutral-300 font-mono">
                       {item.phase}
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-medium uppercase tracking-tight">
+                    <h3 className="text-xl sm:text-2xl font-medium uppercase tracking-tight text-white">
                       {item.title}
                     </h3>
                   </div>
-                  <span className="text-xs tracking-widest font-mono">
+                  <span className="text-xs tracking-widest font-mono text-neutral-400">
                     {item.year}
                   </span>
                 </div>
-                <p className={`mt-4 text-sm font-light leading-relaxed max-w-3xl ${
-                  activeTab === idx ? 'text-neutral-800' : 'text-neutral-400'
-                }`}>
+                <p className="mt-4 text-sm font-light leading-relaxed max-w-3xl text-neutral-400">
                   {item.detail}
                 </p>
               </div>

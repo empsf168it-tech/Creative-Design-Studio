@@ -1,20 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GALLERY_IMAGES, GalleryItem } from '../types';
+import { GALLERY_IMAGES, GalleryItem, PageRoute } from '../types';
 import { Footer } from './Footer';
 
-// Clean, dense grid layout with zero empty gaps or sparse rows
+// Dense grid layout with centered items for trailing rows
 export function buildLayout(count: number, cols: number): number[][] {
   const rows: number[][] = [];
   let imgIdx = 0;
 
   while (imgIdx < count) {
-    const row: number[] = [];
+    const rowItems: number[] = [];
     for (let c = 0; c < cols && imgIdx < count; c++) {
-      row.push(imgIdx++);
+      rowItems.push(imgIdx++);
     }
-    while (row.length < cols) {
-      row.push(-1);
-    }
+
+    // Center items if the row is incomplete
+    const emptyCount = cols - rowItems.length;
+    const leftPad = Math.floor(emptyCount / 2);
+    const rightPad = emptyCount - leftPad;
+
+    const row: number[] = [
+      ...Array(leftPad).fill(-1),
+      ...rowItems,
+      ...Array(rightPad).fill(-1)
+    ];
+
     rows.push(row);
   }
 
@@ -24,7 +33,7 @@ export function buildLayout(count: number, cols: number): number[][] {
 interface BlackPanelProps {
   scrollY: number;
   onWrapperHeightChange?: (height: number) => void;
-  onNavigate?: (route: 'archive' | 'contact' | 'about') => void;
+  onNavigate?: (route: PageRoute) => void;
 }
 
 export const BlackPanel: React.FC<BlackPanelProps> = ({
@@ -144,7 +153,7 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
           {onNavigate && (
             <button
               onClick={() => onNavigate('archive')}
-              className="px-5 py-2.5 rounded-full bg-white text-black text-xs uppercase tracking-widest font-semibold hover:bg-neutral-200 transition-colors pointer-events-auto cursor-pointer"
+              className="px-5 py-2.5 rounded-full bg-white text-black text-xs uppercase tracking-widest font-semibold hover:bg-black hover:text-white border border-white transition-all pointer-events-auto cursor-pointer shadow-md"
             >
               FULL CATALOG →
             </button>
@@ -175,7 +184,9 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
               return (
                 <div
                   key={key}
-                  ref={(el) => (cardsRef.current[imgIdx] = el)}
+                  ref={(el) => {
+                    cardsRef.current[imgIdx] = el;
+                  }}
                   className="bp-card group relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-neutral-900 border border-neutral-800/80 hover:border-neutral-500 transition-all duration-500"
                 >
                   <img
@@ -217,53 +228,59 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
             {onNavigate && (
               <button
                 onClick={() => onNavigate('archive')}
-                className="px-6 py-3 rounded-full bg-white text-black text-xs uppercase tracking-widest font-semibold hover:bg-neutral-200 transition-colors cursor-pointer pointer-events-auto"
+                className="px-6 py-3 rounded-full bg-white text-black text-xs uppercase tracking-widest font-semibold hover:bg-black hover:text-white border border-white transition-all cursor-pointer pointer-events-auto shadow-md"
               >
                 VIEW FULL ARCHIVE CATALOG →
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
-              <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">SPOTLIGHT 01</span>
-              <h3 className="text-2xl font-medium uppercase tracking-tight text-white mt-2 mb-2">
-                STRUCTURED TRENCH
-              </h3>
-              <p className="text-xs font-mono text-neutral-400 mb-4">$1,450 — 480GSM BONDED WOOL</p>
-              <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
-                Asymmetrical storm flap with raw aerospace titanium buckles and zero-waste pattern drafting.
-              </p>
-              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 mb-4">
-                <img src={GALLERY_IMAGES[0].url} alt="Look 01" className="w-full h-full object-cover" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8">
+            <div className="flex flex-col justify-between p-5 sm:p-6 lg:p-8 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
+              <div>
+                <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">SPOTLIGHT 01</span>
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-medium uppercase tracking-tight text-white mt-2 mb-2 break-words">
+                  STRUCTURED TRENCH
+                </h3>
+                <p className="text-xs font-mono text-neutral-400 mb-4 leading-snug break-words">$1,450 — 480GSM BONDED WOOL</p>
+                <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
+                  Asymmetrical storm flap with raw aerospace titanium buckles and zero-waste pattern drafting.
+                </p>
+              </div>
+              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 mt-auto">
+                <img src={GALLERY_IMAGES[1].url} alt="Structured Trench" className="w-full h-full object-cover" />
               </div>
             </div>
 
-            <div className="p-8 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
-              <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">SPOTLIGHT 02</span>
-              <h3 className="text-2xl font-medium uppercase tracking-tight text-white mt-2 mb-2">
-                DECONSTRUCTED BLAZER
-              </h3>
-              <p className="text-xs font-mono text-neutral-400 mb-4">$1,280 — DOUBLE-FACED VIRGIN WOOL</p>
-              <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
-                Exposed seam construction with concealed magnet lapel closures and internal harness straps.
-              </p>
-              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 mb-4">
-                <img src={GALLERY_IMAGES[1].url} alt="Look 02" className="w-full h-full object-cover" />
+            <div className="flex flex-col justify-between p-5 sm:p-6 lg:p-8 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
+              <div>
+                <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">SPOTLIGHT 02</span>
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-medium uppercase tracking-tight text-white mt-2 mb-2 break-words">
+                  DECONSTRUCTED BLAZER
+                </h3>
+                <p className="text-xs font-mono text-neutral-400 mb-4 leading-snug break-words">$1,280 — DOUBLE-FACED VIRGIN WOOL</p>
+                <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
+                  Exposed seam construction with concealed magnet lapel closures and internal harness straps.
+                </p>
+              </div>
+              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 mt-auto">
+                <img src={GALLERY_IMAGES[2].url} alt="Deconstructed Blazer" className="w-full h-full object-cover" />
               </div>
             </div>
 
-            <div className="p-8 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
-              <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">SPOTLIGHT 03</span>
-              <h3 className="text-2xl font-medium uppercase tracking-tight text-white mt-2 mb-2">
-                MONOLITH BOOT 04
-              </h3>
-              <p className="text-xs font-mono text-neutral-400 mb-4">$950 — TUSCAN CALFSKIN</p>
-              <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
-                Hand-finished full-grain leather combat boot with custom sculpted Vibram tread sole.
-              </p>
-              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 mb-4">
-                <img src={GALLERY_IMAGES[3].url} alt="Look 04" className="w-full h-full object-cover" />
+            <div className="flex flex-col justify-between p-5 sm:p-6 lg:p-8 rounded-2xl bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
+              <div>
+                <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">SPOTLIGHT 03</span>
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-medium uppercase tracking-tight text-white mt-2 mb-2 break-words">
+                  MONOLITH BOOT 04
+                </h3>
+                <p className="text-xs font-mono text-neutral-400 mb-4 leading-snug break-words">$950 — TUSCAN CALFSKIN</p>
+                <p className="text-sm text-neutral-400 font-light leading-relaxed mb-6">
+                  Hand-finished full-grain leather combat boot with custom sculpted Vibram tread sole.
+                </p>
+              </div>
+              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 mt-auto">
+                <img src={GALLERY_IMAGES[3].url} alt="Monolith Boot 04" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -280,7 +297,7 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="p-6 rounded-xl bg-neutral-900/60 border border-neutral-800">
-              <div className="text-2xl text-neutral-300 mb-4">❖</div>
+              <div className="text-2xl text-neutral-300 mb-4 text-center">❖</div>
               <h3 className="text-lg font-medium uppercase text-white mb-2">480GSM BONDED WOOL</h3>
               <p className="text-xs text-neutral-400 font-light leading-relaxed">
                 Woven on antique shuttle looms in Bishu, Japan. Double-face bonded for weatherproof structure.
@@ -288,7 +305,7 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
             </div>
 
             <div className="p-6 rounded-xl bg-neutral-900/60 border border-neutral-800">
-              <div className="text-2xl text-neutral-300 mb-4">⚙</div>
+              <div className="text-2xl text-neutral-300 mb-4 text-center">⚙</div>
               <h3 className="text-lg font-medium uppercase text-white mb-2">AEROSPACE TITANIUM</h3>
               <p className="text-xs text-neutral-400 font-light leading-relaxed">
                 Grade 5 titanium buckles and tags CNC-milled with laser-engraved archive codes.
@@ -296,7 +313,7 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
             </div>
 
             <div className="p-6 rounded-xl bg-neutral-900/60 border border-neutral-800">
-              <div className="text-2xl text-neutral-300 mb-4">∷</div>
+              <div className="text-2xl text-neutral-300 mb-4 text-center">∷</div>
               <h3 className="text-lg font-medium uppercase text-white mb-2">ZERO-WASTE PATTERNS</h3>
               <p className="text-xs text-neutral-400 font-light leading-relaxed">
                 Digital algorithmic pattern drafting achieving 99.4% fabric width utilization.
@@ -304,7 +321,7 @@ export const BlackPanel: React.FC<BlackPanelProps> = ({
             </div>
 
             <div className="p-6 rounded-xl bg-neutral-900/60 border border-neutral-800">
-              <div className="text-2xl text-neutral-300 mb-4">✦</div>
+              <div className="text-2xl text-neutral-300 mb-4 text-center">✦</div>
               <h3 className="text-lg font-medium uppercase text-white mb-2">ENCRYPTED NFC LEDGER</h3>
               <p className="text-xs text-neutral-400 font-light leading-relaxed">
                 Encrypted NFC tags embedded inside garment linings for lifetime buy-back provenance.

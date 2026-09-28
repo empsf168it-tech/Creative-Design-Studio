@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PageRoute, GalleryItem } from './types';
 import { CustomCursor } from './components/CustomCursor';
-import { Logo } from './components/Logo';
 import { Caption } from './components/Caption';
 import { HeaderNav } from './components/HeaderNav';
 import { VideoCanvas } from './components/VideoCanvas';
@@ -137,9 +136,6 @@ export const App: React.FC = () => {
         onOpenCart={() => setCartOpen(true)}
         cartCount={totalCartCount}
       />
-
-      {/* Global Logo */}
-      <Logo onNavigate={handleNavigate} />
 
       {/* CART DRAWER */}
       <CartDrawer

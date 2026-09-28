@@ -144,7 +144,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 disabled={items.length === 0}
                 onClick={onCheckout}
-                className="w-full py-4 bg-white text-black text-xs uppercase tracking-[0.2em] font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="w-full py-4 bg-white text-black text-xs uppercase tracking-[0.2em] font-semibold rounded-xl hover:bg-black hover:text-white border border-white disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-lg"
               >
                 PROCEED TO CHECKOUT (${subtotal.toLocaleString()}) →
               </button>

@@ -1,3 +1,7 @@
+import capImg from './assets/images/valence_hero_cap.png';
+import trenchImg from './assets/images/valence_trench_look.png';
+import blazerImg from './assets/images/valence_blazer_look.png';
+
 export type PageRoute = 'home' | 'about' | 'contact' | 'archive';
 
 export interface GalleryItem {
@@ -13,7 +17,7 @@ export interface GalleryItem {
 export const GALLERY_IMAGES: GalleryItem[] = [
   {
     id: 1,
-    url: "/images/valence_hero_cap.png",
+    url: capImg,
     alt: "VALENCE Archival Cap Look 01",
     title: "VALENCE PIXEL ARCHIVE CAP",
     category: "Outerwear",
@@ -22,7 +26,7 @@ export const GALLERY_IMAGES: GalleryItem[] = [
   },
   {
     id: 2,
-    url: "/images/valence_trench_look.png",
+    url: trenchImg,
     alt: "VALENCE Structured Trench 02",
     title: "STRUCTURED TRENCH 02",
     category: "Outerwear",
@@ -31,7 +35,7 @@ export const GALLERY_IMAGES: GalleryItem[] = [
   },
   {
     id: 3,
-    url: "/images/valence_blazer_look.png",
+    url: blazerImg,
     alt: "VALENCE Deconstructed Blazer 03",
     title: "DECONSTRUCTED BLAZER",
     category: "Tailoring",
@@ -108,4 +112,4 @@ export const VIDEO_URLS = {
   right: "https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154401_a664f076-b971-4557-8728-40ef9ea4c49b.mp4"
 };
 
-export const HERO_IMAGE_URL = "/images/valence_hero_cap.png";
+export const HERO_IMAGE_URL = capImg;
